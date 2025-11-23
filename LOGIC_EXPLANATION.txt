@@ -1,0 +1,131 @@
+# Application Logic - Simple Explanation
+
+## Overview
+This tool helps analyze how international financial aid (grants) affects currency values in developing countries, and identifies unusual currency movements.
+
+---
+
+## 1. Grant Impact Analysis
+
+### What We Measure
+When a country receives a large grant, we check if the currency became stronger or weaker in the following weeks.
+
+### How We Score Impact (0-100)
+
+**Three Key Factors:**
+
+1. **Trend Change (30% weight)**
+   - Did the currency's direction change after the grant?
+   - Example: If currency was weakening before, did it start strengthening after?
+   - Score: 0 = no change, 100 = complete reversal
+
+2. **Volatility Change (50% weight)**
+   - Did the currency become more stable or more unstable?
+   - We prefer less volatility (more stability)
+   - Score: 100 = much more stable, 0 = much more unstable
+
+3. **Magnitude (20% weight)**
+   - How much did the currency value actually change?
+   - Bigger changes = higher scores
+   - Score based on percentage movement
+
+**Final Score:** Combines all three factors to give a 0-100 rating
+- 80-100: Strong positive impact
+- 60-79: Moderate impact
+- 40-59: Weak impact
+- Below 40: Minimal or negative impact
+
+---
+
+## 2. Anomaly Detection
+
+### What We Look For
+Unusual currency movements - when a currency changes by more than 15% in less than 30 days.
+
+### Detection Parameters
+- **Volatility Threshold:** How big the change must be (e.g., 15%)
+- **Time Window:** How quickly it happened (e.g., 30 days)
+
+### Why It Matters
+Sharp currency movements often signal economic events that need investigation.
+
+---
+
+## 3. Correlation Analysis
+
+When we find an unusual movement, we check for possible causes:
+
+### A. Grant Disbursements
+- **What:** Did the country receive aid around this time?
+- **Window:** ±7 to ±60 days around the movement
+- **Result:** Shows if grants might have triggered the change
+
+### B. Commodity Price Movements
+- **What:** Did key export prices change significantly?
+- **Examples:** 
+  - Ghana → Gold, Cocoa prices
+  - Colombia → Oil, Coffee prices
+- **Threshold:** Changes over 10%
+- **Why:** Export prices directly affect currency demand
+
+### C. External Events
+- **News:** Major economic or political news
+- **Policy Rates:** Central bank interest rate changes
+- **IMF Releases:** International Monetary Fund announcements
+
+### Correlation Indicators
+We mark anomalies with icons to show what correlations exist:
+- 💰 = Grant found nearby
+- 🌾 = Significant commodity movement
+- 📰 = Related news articles
+
+---
+
+## 4. Data Time Periods
+
+### Default Analysis Window
+- **Historical Data:** From 2010 to present
+- **Grant Analysis:** Compares 4-12 weeks before/after grant
+- **Anomaly Search:** Scans entire dataset
+
+### Why Historical Data?
+- Shows patterns over time
+- Identifies if current situations are unusual
+- Validates relationships between grants and currency
+
+---
+
+## 5. Confidence & Reliability
+
+### What Makes Results Reliable?
+1. **Multiple Data Sources:** 
+   - Yahoo Finance (FX rates, commodities)
+   - IMF & World Bank (grant data)
+   - Economic APIs (policy rates, news)
+
+2. **Outlier Removal:**
+   - Removes bad data points (e.g., obvious errors)
+   - Uses statistical methods (3-sigma rule)
+
+3. **Caching Strategy:**
+   - Stores results to avoid repetitive calculations
+   - 12-hour refresh for market data
+
+### Limitations to Mention
+- Correlation ≠ Causation (just because they happen together doesn't mean one caused the other)
+- Many factors affect currencies simultaneously
+- News coverage may be incomplete for some periods
+
+---
+
+## Key Takeaways for Presentation
+
+1. **Impact Scoring:** Combines trend change, stability improvement, and magnitude into a simple 0-100 score
+
+2. **Anomaly Detection:** Automatically finds unusual currency movements that need attention
+
+3. **Smart Correlation:** Checks grants, commodities, and news to understand context
+
+4. **User Control:** Adjustable parameters let analysts fine-tune the analysis
+
+5. **Visual Feedback:** Icons and charts make patterns immediately visible

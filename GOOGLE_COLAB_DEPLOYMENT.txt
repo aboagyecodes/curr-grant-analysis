@@ -1,0 +1,228 @@
+# Google Colab Deployment Guide
+
+## Overview
+This guide explains how to run the Grant Impact & Anomaly Investigator app in Google Colab.
+
+**Important Note:** Google Colab is primarily designed for Jupyter notebooks. Running a full Streamlit app in Colab requires some workarounds and limitations apply.
+
+---
+
+## Option 1: Use Streamlit Cloud (Recommended)
+
+**Much easier than Colab!**
+
+1. Push your code to GitHub
+2. Go to https://share.streamlit.io
+3. Sign in with GitHub
+4. Click "New app"
+5. Select your repository
+6. Set main file: `app.py`
+7. Click "Deploy"
+
+**Advantages:**
+- Free tier available
+- Proper Streamlit environment
+- Public URL for sharing
+- No session timeouts
+
+---
+
+## Option 2: Run in Google Colab (Advanced)
+
+### Prerequisites
+- Google account
+- GitHub repository with your code
+
+### Step-by-Step Instructions
+
+#### 1. Create a New Colab Notebook
+- Go to https://colab.research.google.com
+- Click "New notebook"
+
+#### 2. Clone Your Repository
+```python
+# Cell 1: Clone the repository
+!git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+%cd YOUR_REPO_NAME
+```
+
+#### 3. Install Dependencies
+```python
+# Cell 2: Install required packages
+!pip install -q streamlit pandas plotly yfinance fredapi newsapi-python feedparser
+```
+
+#### 4. Upload Grant Data Files
+```python
+# Cell 3: Upload IMF and World Bank files
+from google.colab import files
+import os
+
+# Create data directory
+!mkdir -p data/grants
+
+# Upload files
+print("Please upload IMFData.xls:")
+uploaded = files.upload()
+for filename in uploaded.keys():
+    os.rename(filename, f'data/grants/{filename}')
+
+print("Please upload WorldBankIDAData.csv:")
+uploaded = files.upload()
+for filename in uploaded.keys():
+    os.rename(filename, f'data/grants/{filename}')
+```
+
+#### 5. Install Localtunnel (for public URL)
+```python
+# Cell 4: Install localtunnel
+!npm install -g localtunnel
+```
+
+#### 6. Run Streamlit in Background
+```python
+# Cell 5: Start Streamlit
+!streamlit run app.py &>/dev/null&
+```
+
+#### 7. Create Public URL
+```python
+# Cell 6: Expose via localtunnel
+!npx localtunnel --port 8501
+```
+
+Click the URL provided (e.g., https://random-name.loca.lt)
+
+#### 8. Access the App
+- Click the localtunnel URL
+- May show a warning - click "Continue"
+- Your app should load
+
+---
+
+## Limitations of Google Colab
+
+### 1. Session Timeouts
+- Colab disconnects after 12 hours (free tier)
+- Disconnects after 90 minutes of inactivity
+- All data is lost when session ends
+
+### 2. File Persistence
+- Uploaded files are temporary
+- Need to re-upload data each session
+- Use Google Drive mount for persistence:
+  ```python
+  from google.colab import drive
+  drive.mount('/content/drive')
+  ```
+
+### 3. Performance
+- Limited resources on free tier
+- Slower than local execution
+- May timeout on heavy computations
+
+### 4. URL Instability
+- Localtunnel URLs change each session
+- Not suitable for production use
+
+---
+
+## Alternative Cloud Options
+
+### 1. **Streamlit Cloud** (Recommended)
+- Free tier: 1 GB storage, unlimited apps
+- Best for Streamlit apps
+- https://streamlit.io/cloud
+
+### 2. **Heroku**
+- Free tier available
+- Good for production
+- Requires some setup
+
+### 3. **Render**
+- Free tier: 512 MB RAM
+- Automatic deployment from GitHub
+- https://render.com
+
+### 4. **Google Cloud Run**
+- Pay-as-you-go
+- Scales automatically
+- More complex setup
+
+---
+
+## Colab Notebook Template
+
+Here's a complete notebook you can use:
+
+```python
+# === CELL 1: Setup ===
+# Clone repository
+!git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+%cd YOUR_REPO
+
+# === CELL 2: Install ===
+!pip install -q streamlit pandas plotly yfinance fredapi newsapi-python feedparser
+
+# === CELL 3: Upload Data ===
+from google.colab import files
+import os
+
+!mkdir -p data/grants
+
+print("Upload IMFData.xls:")
+uploaded = files.upload()
+for f in uploaded.keys():
+    os.rename(f, f'data/grants/{f}')
+
+print("Upload WorldBankIDAData.csv:")
+uploaded = files.upload()
+for f in uploaded.keys():
+    os.rename(f, f'data/grants/{f}')
+
+# === CELL 4: Install Localtunnel ===
+!npm install -g localtunnel
+
+# === CELL 5: Run Streamlit ===
+!streamlit run app.py &>/dev/null&
+
+# === CELL 6: Create Public URL ===
+!npx localtunnel --port 8501
+```
+
+---
+
+## Troubleshooting
+
+### App Won't Start
+- Check if all dependencies installed: `!pip list`
+- Verify data files uploaded: `!ls data/grants/`
+- Check for errors: `!streamlit run app.py`
+
+### Localtunnel Connection Issues
+- Try restarting the tunnel (Cell 6 again)
+- Alternative: Use ngrok instead:
+  ```python
+  !pip install pyngrok
+  from pyngrok import ngrok
+  public_url = ngrok.connect(8501)
+  print(f'Streamlit URL: {public_url}')
+  ```
+
+### Performance Issues
+- Reduce date range in configuration
+- Select fewer currencies
+- Use Colab Pro for better resources
+
+---
+
+## Recommendation
+
+**For this application, use Streamlit Cloud instead of Colab:**
+- Better suited for Streamlit apps
+- No session timeouts
+- Stable URLs
+- Free tier is sufficient
+- Easier deployment
+
+Google Colab is great for notebooks but not ideal for full web applications.

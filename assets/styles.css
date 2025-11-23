@@ -1,0 +1,263 @@
+/* Custom CSS for IMF/World Bank Currency Impact Analysis App - Minimal Design */
+
+/* Dashboard Background */
+.main {
+    background-color: #FFFFFF;
+}
+
+/* Clean, minimal element containers */
+.element-container {
+    border-radius: 8px;
+}
+
+/* Metrics - Neutral */
+[data-testid="stMetricValue"] {
+    font-size: 28px;
+    font-weight: 600;
+    color: #1a1a1a !important;
+}
+
+[data-testid="stMetricLabel"] {
+    font-size: 14px;
+    font-weight: 500;
+    color: #666 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Headers - Minimal and Clean */
+h1 {
+    color: #1a1a1a;
+    font-weight: 700;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 30px;
+}
+
+h2,
+h3 {
+    color: #1a1a1a;
+    font-weight: 600;
+    margin-top: 20px;
+}
+
+/* Buttons - Minimal Design with Sage Green */
+/* Only targeting specific button classes if needed, but Streamlit theme handles primary */
+.stButton>button {
+    border-radius: 8px;
+    border: none;
+    padding: 12px 24px;
+    transition: all 0.2s ease;
+}
+
+.stButton>button:hover {
+    transform: translateY(-1px);
+}
+
+/* Sidebar - Clean */
+[data-testid="stSidebar"] {
+    border-right: 1px solid #e0e0e0;
+}
+
+/* Info/Warning/Success boxes - Subtle */
+.stAlert {
+    border-radius: 8px;
+    padding: 16px;
+    border-left: 3px solid;
+}
+
+div[data-baseweb="notification"] {
+    border-radius: 8px;
+}
+
+/* Success messages */
+.stSuccess {
+    background-color: #f0fdf4;
+    border-left-color: #22c55e;
+}
+
+/* Warning messages */
+.stWarning {
+    background-color: #fefce8;
+    border-left-color: #eab308;
+}
+
+/* Error messages */
+.stError {
+    background-color: #fef2f2;
+    border-left-color: #ef4444;
+}
+
+/* Info messages */
+.stInfo {
+    background-color: #f0f9ff;
+    border-left-color: #3b82f6;
+}
+
+/* Data frames - Clean borders */
+[data-testid="stDataFrame"] {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+}
+
+/* Text inputs - Minimal */
+.stTextInput>div>div>input {
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    padding: 10px 12px;
+    transition: border-color 0.2s ease;
+}
+
+.stTextInput>div>div>input:focus {
+    border-color: #1a1a1a;
+    box-shadow: 0 0 0 1px #1a1a1a;
+}
+
+/* Select boxes - Clean */
+.stSelectbox>div>div {
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+/* Multiselect - Clean */
+.stMultiSelect>div>div {
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+/* Sliders - Minimal and narrow */
+.stSlider>div>div>div>div {
+    background-color: #b0c4b1 !important;
+}
+
+.stSlider [data-testid="stTickBar"] {
+    display: none;
+}
+
+.stSlider [data-testid="stThumbValue"] {
+    color: #1a1a1a !important;
+}
+
+.stSlider {
+    width: 100%;
+}
+
+/* Date inputs - smaller */
+.stDateInput>div>div>input {
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    max-width: 150px;
+}
+
+/* Number inputs */
+.stNumberInput>div>div>input {
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+/* Checkbox */
+.stCheckbox {
+    padding: 4px 0;
+}
+
+/* Expander - Clean */
+.streamlit-expanderHeader {
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    font-weight: 500;
+    border: 1px solid #e0e0e0;
+}
+
+/* Download button */
+.stDownloadButton>button {
+    background-color: #f8f8f8;
+    color: #1a1a1a;
+    border: 1px solid #e0e0e0;
+}
+
+.stDownloadButton>button:hover {
+    background-color: #e8e8e8;
+}
+
+/* Tabs - Minimal */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 4px;
+}
+
+.stTabs [data-baseweb="tab"] {
+    background-color: transparent;
+    border-radius: 8px;
+    padding: 10px 20px;
+    border: 1px solid transparent;
+    color: #666;
+}
+
+.stTabs [data-baseweb="tab"]:hover {
+    background-color: #f8f8f8;
+}
+
+.stTabs [aria-selected="true"] {
+    background-color: #b0c4b1;
+    color: white;
+    border-color: #b0c4b1;
+}
+
+/* Plotly charts - Clean background */
+.js-plotly-plot {
+    border-radius: 8px;
+    background-color: #fafafa !important;
+    border: 1px solid #e0e0e0;
+}
+
+/* Spinner */
+.stSpinner>div {
+    border-top-color: #1a1a1a !important;
+}
+
+/* Links - Subtle */
+a {
+    color: #1a1a1a;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+a:hover {
+    color: #333;
+}
+
+/* Horizontal rule - Subtle */
+hr {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 24px 0;
+}
+
+/* Code blocks - Minimal */
+code {
+    background-color: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 0.9em;
+}
+
+pre {
+    background-color: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+/* Radio buttons - Clean */
+.stRadio>div {
+    background-color: transparent;
+    padding: 0;
+}
+
+/* Landing page specific - centered content */
+.block-container {
+    max-width: 1200px;
+    padding-top: 3rem;
+}
