@@ -4,7 +4,7 @@ External Data Integration Module
 Fetches data from external sources:
 - IMF Press Releases
 - Central Bank Policy Rates (via FRED)
-- News Headlines (via RSS feeds)
+- News Headlines (via multiple RSS feeds + central bank scraping)
 """
 
 import requests
@@ -15,8 +15,18 @@ import os
 import json
 import sys
 import feedparser
+import logging
+from difflib import SequenceMatcher
+from email.utils import parsedate_to_datetime
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-from config.settings import CACHE_DIR, PILOT_CURRENCIES, DEFAULT_NEWSDATA_KEY
+from config.settings import (
+    CACHE_DIR, PILOT_CURRENCIES, DEFAULT_NEWSDATA_KEY,
+    RSS_FEEDS, CENTRAL_BANK_URLS, NEWS_KEYWORDS, COUNTRY_KEYWORDS,
+    NEWS_CACHE_VALIDITY_HOURS, NEWS_MAX_ARTICLES_PER_FETCH
+)
+
+logger = logging.getLogger(__name__)
 
 
 class ExternalDataFetcher:
@@ -267,26 +277,274 @@ class ExternalDataFetcher:
         except Exception:
             return []
     
-    def get_news_headlines(self, country_name, start_date, end_date, max_results=3, check_cache_only=False):
+    def _fetch_from_enhanced_rss(self, country_name, start_date, end_date, max_results=100):
         """
-        Get news headlines with historical coverage
+        Fetch news from Google News (country-specific search)
+        Falls back to general country searches to maximize coverage
+        
+        Returns:
+            list: List of news dicts, sorted by date
+        """
+        all_articles = []
+        
+        # List of search queries to try (country + relevant keywords)
+        keywords = COUNTRY_KEYWORDS.get(country_name, [country_name])
+        search_queries = [country_name] + keywords[:3]  # Top 3 keywords
+        
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+        
+        for query in search_queries:
+            try:
+                # Build Google News RSS URL with search query
+                query_encoded = query.replace(' ', '+')
+                feed_url = f"https://news.google.com/rss/search?q={query_encoded}&hl=en-US&gl=US&ceid=US:en"
+                
+                # Fetch with headers
+                response = requests.get(feed_url, headers=headers, timeout=15)
+                response.raise_for_status()
+                
+                # Parse RSS feed
+                feed = feedparser.parse(response.content)
+                
+                if not feed.entries:
+                    logger.debug(f"No entries found for query: {query}")
+                    continue
+                
+                logger.debug(f"Found {len(feed.entries)} entries for query: {query}")
+                
+                for entry in feed.entries[:30]:  # Process more entries per query
+                    try:
+                        pub_date_str = entry.get('published', entry.get('updated', ''))
+                        
+                        if not pub_date_str:
+                            continue
+                        
+                        pub_date_obj = parsedate_to_datetime(pub_date_str)
+                        
+                        # Filter by date range with buffer
+                        buffer_days = 3
+                        if not (pub_date_obj.date() >= (start_date - timedelta(days=buffer_days)).date() and 
+                                pub_date_obj.date() <= (end_date + timedelta(days=buffer_days)).date()):
+                            continue
+                        
+                        # Extract source from entry
+                        source = 'Google News'
+                        try:
+                            if hasattr(entry, 'source') and 'title' in entry.source:
+                                source = entry.source['title']
+                        except:
+                            pass
+                        
+                        article = {
+                            'date': pub_date_obj.strftime('%Y-%m-%d'),
+                            'title': entry.get('title', 'No title'),
+                            'description': entry.get('summary', '')[:300],
+                            'source': source,
+                            'url': entry.get('link', ''),
+                            'published_at': pub_date_obj.isoformat()
+                        }
+                        
+                        all_articles.append(article)
+                    except Exception as e:
+                        logger.debug(f"Error parsing entry: {e}")
+                        continue
+                        
+            except Exception as e:
+                logger.debug(f"Error fetching for query '{query}': {e}")
+                continue
+        
+        # Deduplicate by URL
+        unique_articles = {}
+        for article in all_articles:
+            url = article.get('url', '')
+            if url and url not in unique_articles:
+                unique_articles[url] = article
+        
+        # Sort by date (newest first)
+        sorted_articles = sorted(
+            unique_articles.values(),
+            key=lambda x: x['published_at'],
+            reverse=True
+        )
+        
+        return sorted_articles[:max_results]
+    
+    def _fetch_from_central_bank(self, country_code, start_date, end_date, max_results=50):
+        """
+        Fetch news from central bank press releases via web scraping
+        
+        Returns:
+            list: List of news dicts from central bank sources
+        """
+        if country_code not in CENTRAL_BANK_URLS:
+            return []
+        
+        try:
+            cb_info = CENTRAL_BANK_URLS[country_code]
+            press_url = cb_info['press_url']
+            
+            response = requests.get(press_url, timeout=10)
+            response.raise_for_status()
+            
+            soup = BeautifulSoup(response.content, 'html.parser')
+            articles = []
+            
+            # Try to find news items (selectors may vary by site)
+            selectors = [
+                cb_info.get('selector', ''),
+                '.press-release', '.news-item', '.announcement',
+                '[class*="press"]', '[class*="news"]', '[class*="release"]',
+                'article', '.article'
+            ]
+            
+            news_items = []
+            for selector in selectors:
+                if selector:
+                    news_items.extend(soup.select(selector))
+            
+            # Extract information from found items
+            for item in news_items[:max_results]:
+                try:
+                    # Try to extract title
+                    title_elem = item.find(['h2', 'h3', 'a', 'p'])
+                    title = title_elem.get_text(strip=True) if title_elem else ''
+                    
+                    if not title or len(title) < 5:
+                        continue
+                    
+                    # Try to extract URL
+                    link_elem = item.find('a')
+                    url = link_elem.get('href', '') if link_elem else ''
+                    if url and not url.startswith('http'):
+                        url = press_url.rsplit('/', 1)[0] + '/' + url
+                    
+                    # Try to extract date (often in class or data attribute)
+                    date_elem = item.find(class_=lambda x: x and ('date' in x.lower() or 'time' in x.lower()))
+                    if not date_elem:
+                        date_elem = item.find(['time', 'span'])
+                    
+                    date_str = date_elem.get_text(strip=True) if date_elem else ''
+                    
+                    # Try to parse date
+                    try:
+                        from dateutil import parser as date_parser
+                        pub_date = date_parser.parse(date_str)
+                    except:
+                        pub_date = datetime.now()
+                    
+                    # Check if within date range
+                    if pub_date.date() < start_date or pub_date.date() > end_date:
+                        continue
+                    
+                    article = {
+                        'date': pub_date.strftime('%Y-%m-%d'),
+                        'title': title[:200],
+                        'description': '',
+                        'source': cb_info['name'],
+                        'url': url,
+                        'published_at': pub_date.isoformat()
+                    }
+                    
+                    articles.append(article)
+                except Exception as e:
+                    continue
+            
+            return articles[:max_results]
+            
+        except Exception as e:
+            logger.debug(f"Error fetching central bank news for {country_code}: {e}")
+            return []
+    
+    def _filter_and_score_news(self, articles, country_code):
+        """
+        Filter and score news articles by relevance to currency analysis
+        
+        Scoring:
+        - CRITICAL keywords: +3 points
+        - HIGH keywords: +2 points
+        - MEDIUM keywords: +1 point
+        - Country-specific keywords: +2 points
+        - Minimum score to include: 2
+        
+        Returns:
+            list: Scored and filtered articles, sorted by score then date
+        """
+        scored_articles = []
+        
+        country_keywords = COUNTRY_KEYWORDS.get(country_code, [])
+        
+        for article in articles:
+            content = f"{article.get('title', '')} {article.get('description', '')}".lower()
+            score = 0
+            
+            # Check for critical keywords
+            for keyword in NEWS_KEYWORDS.get('CRITICAL', []):
+                if keyword.lower() in content:
+                    score += 3
+            
+            # Check for high-relevance keywords
+            for keyword in NEWS_KEYWORDS.get('HIGH', []):
+                if keyword.lower() in content:
+                    score += 2
+            
+            # Check for medium-relevance keywords
+            for keyword in NEWS_KEYWORDS.get('MEDIUM', []):
+                if keyword.lower() in content:
+                    score += 1
+            
+            # Check for country-specific keywords
+            for keyword in country_keywords:
+                if keyword.lower() in content:
+                    score += 2
+            
+            # Only include articles with minimum relevance
+            if score >= 2:
+                article['relevance_score'] = score
+                scored_articles.append(article)
+        
+        # Sort by score (descending) then by date (newest first)
+        scored_articles.sort(
+            key=lambda x: (x['relevance_score'], x['published_at']),
+            reverse=True
+        )
+        
+        return scored_articles
+    
+    def get_news_headlines(self, country_name, start_date, end_date, max_results=20, check_cache_only=False):
+        """
+        Get news headlines with enhanced multi-source coverage
         
         Strategy:
         1. Check cache first
-        2. Try NewsData.io API (historical coverage: 7+ years)
-        3. Fall back to RSS if NewsData.io fails (recent news only)
-        4. Cache successful results
+        2. Fetch from enhanced RSS feeds (BBC, Reuters, FT, Economist, IMF, World Bank)
+        3. Fetch from central bank press releases (country-specific)
+        4. Try NewsData.io API if available (historical coverage)
+        5. Filter and score by relevance
+        6. Deduplicate
+        7. Cache results
         
         Args:
             country_name: Full country name
             start_date: Start date
             end_date: End date
-            max_results: Max number of results (default 3)
-            check_cache_only: If True, only return cached results (no API calls)
+            max_results: Max number of results to return
+            check_cache_only: If True, only return cached results
         
         Returns:
-            list: List of dicts with {date, title, source, url}
+            list: Scored and filtered news articles
         """
+        # Get country code from country name
+        country_code = None
+        for code, info in PILOT_CURRENCIES.items():
+            if info.get('country') == country_name:
+                country_code = code
+                break
+        
+        if not country_code:
+            return []
+        
         # Convert dates to strings for cache key
         if hasattr(start_date, 'strftime'):
             start_str = start_date.strftime('%Y-%m-%d')
@@ -299,40 +557,67 @@ class ExternalDataFetcher:
             end_str = str(end_date)
         
         # Create cache key
-        cache_key = f"news_{country_name.replace(' ', '_')}_{start_str}_{end_str}.json"
+        cache_key = f"news_enhanced_{country_name.replace(' ', '_')}_{start_str}_{end_str}.json"
         cache_file = os.path.join(CACHE_DIR, cache_key)
         
         # Check cache first
         if os.path.exists(cache_file):
             try:
-                with open(cache_file, 'r') as f:
-                    cached_data = json.load(f)
-                    # print(f"DEBUG: Using cached news for {country_name} ({len(cached_data)} articles)")
-                    return cached_data[:max_results]
+                # Check cache validity
+                cache_age_hours = (datetime.now() - datetime.fromtimestamp(os.path.getmtime(cache_file))).total_seconds() / 3600
+                if cache_age_hours < NEWS_CACHE_VALIDITY_HOURS:
+                    with open(cache_file, 'r') as f:
+                        cached_data = json.load(f)
+                        return cached_data[:max_results]
             except Exception as e:
-                print(f"Warning: Could not read cache file {cache_file}: {e}")
+                logger.debug(f"Could not read cache: {e}")
         
-        # If cache only mode, return empty list if no cache found
+        # If cache only mode, return empty
         if check_cache_only:
             return []
         
-        #  Try NewsData.io first (historical coverage)
-        headlines = self._fetch_from_newsdata_io(country_name, start_date, end_date, max_results)
+        # Aggregate articles from multiple sources
+        all_articles = []
         
-        # Fall back to RSS if NewsData.io returns no results
-        if not headlines:
-            headlines = self._fetch_from_rss(country_name, start_date, end_date, max_results)
+        # Source 1: Enhanced RSS feeds
+        rss_articles = self._fetch_from_enhanced_rss(country_name, start_date, end_date, NEWS_MAX_ARTICLES_PER_FETCH)
+        all_articles.extend(rss_articles)
+        
+        # Source 2: Central bank press releases
+        cb_articles = self._fetch_from_central_bank(country_code, start_date, end_date, 50)
+        all_articles.extend(cb_articles)
+        
+        # Source 3: NewsData.io API (if available and working)
+        newsdata_articles = self._fetch_from_newsdata_io(country_name, start_date, end_date, NEWS_MAX_ARTICLES_PER_FETCH)
+        all_articles.extend(newsdata_articles)
+        
+        # Deduplicate by URL
+        unique_articles = {}
+        for article in all_articles:
+            url = article.get('url', '')
+            title = article.get('title', '')
+            
+            # Use URL as primary key, fallback to title
+            key = url if url else title
+            
+            if key and key not in unique_articles:
+                unique_articles[key] = article
+        
+        # Filter and score for relevance
+        scored_articles = self._filter_and_score_news(
+            list(unique_articles.values()),
+            country_code
+        )
         
         # Cache the results
-        if headlines:
+        if scored_articles:
             try:
                 with open(cache_file, 'w') as f:
-                    json.dump(headlines, f, indent=2)
-            except Exception:
-                # Silently fail on cache write
-                pass
+                    json.dump(scored_articles, f, indent=2, default=str)
+            except Exception as e:
+                logger.debug(f"Could not write cache: {e}")
         
-        return headlines
+        return scored_articles[:max_results]
     
     def get_all_correlation_data(self, country_code, start_date, end_date):
         """
