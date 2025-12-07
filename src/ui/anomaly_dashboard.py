@@ -384,11 +384,20 @@ def render_anomaly_dashboard():
                 
                 if news_list and len(news_list) > 0:
                     with st.expander(f"Related News ({len(news_list)} articles)", expanded=True):
-                        for article in news_list[:5]:
-                            st.write(f"**{article['date']}** - {article['title']}")
-                            st.caption(f"Source: {article['source']}")
-                            if 'url' in article:
-                                st.markdown(f"[Read more]({article['url']})")
+                        for article in news_list[:10]:
+                            col1, col2 = st.columns([4, 1])
+                            
+                            with col1:
+                                st.write(f"**{article['date']}** - {article['title']}")
+                                st.caption(f"📰 Source: {article['source']} | Relevance: {article.get('relevance_score', '?')}⭐")
+                            
+                            with col2:
+                                # Display clickable link button to source
+                                url = article.get('url', '')
+                                if url and url != '#':
+                                    st.markdown(f"[🔗 Source]({url})")
+                                else:
+                                    st.caption("(No link)")
                 else:
                     st.info("No news articles found for this specific period.")
                     if not getattr(external_fetcher, 'newsdata_key', None):

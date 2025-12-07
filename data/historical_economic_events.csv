@@ -1,94 +1,94 @@
-date,country_code,country_name,event_title,source,relevance_score
-1986-02-15,GHA,Ghana,Ghana IMF Structural Adjustment Program,IMF,3
-1990-03-20,GHA,Ghana,Ghana Currency Reforms and Economic Liberalization,World Bank,2
-1994-06-10,GHA,Ghana,Ghana Removes Currency Restrictions,Central Bank,2
-2000-11-25,GHA,Ghana,Ghana IMF Approved Poverty Reduction Strategy,IMF,2
-2005-12-12,GHA,Ghana,Ghana Debt Relief and Economic Growth,World Bank,2
-2010-05-10,GHA,Ghana,Ghana IMF Article IV Consultation,IMF,3
-2012-07-03,GHA,Ghana,Ghana Cedi Depreciation Accelerates,Central Bank,3
-2014-10-15,GHA,Ghana,Ghana Economic Crisis and IMF Support,World Bank,3
-2015-04-06,GHA,Ghana,Ghana Raises Cedi in Stabilization Efforts,Central Bank,3
-2015-08-20,GHA,Ghana,Ghana Seeks IMF Bailout - Economic Stabilization Program,IMF,4
-2016-03-10,GHA,Ghana,Ghana IMF Stand-By Arrangement Approved,IMF,4
-2017-04-03,GHA,Ghana,Ghana Completes IMF Program Successfully,IMF,3
-2018-06-19,GHA,Ghana,Ghana Economic Growth Accelerates Post-IMF,World Bank,2
-2020-09-15,GHA,Ghana,Ghana Cedi Weakens Amid COVID-19,Central Bank,2
-2023-10-20,GHA,Ghana,Ghana Inflation Control Improves,World Bank,2
-1986-04-22,TRY,Turkey,Turkey IMF Stabilization Program Begins,IMF,3
-1994-01-05,TRY,Turkey,Turkey Currency Crisis and Inflation Surge,World Bank,4
-2001-02-19,TRY,Turkey,Turkey Banking Crisis and Lira Collapse,World Bank,4
-2001-11-15,TRY,Turkey,Turkey IMF Support Program Extended,IMF,3
-2008-09-15,TRY,Turkey,Turkey Currency Crisis Amid Global Financial Crisis,World Bank,3
-2010-11-20,TRY,Turkey,Turkey Central Bank Adjusts Policy Rate,Central Bank,2
-2013-05-22,TRY,Turkey,Turkey Lira Depreciation and Capital Controls,Central Bank,3
-2013-12-17,TRY,Turkey,Turkey Monetary Policy Tightening,Central Bank,2
-2015-07-10,TRY,Turkey,Turkey Currency Volatility and Inflation,IMF,3
-2018-08-10,TRY,Turkey,Turkey Lira Crisis and Economic Volatility,World Bank,4
-2020-03-21,TRY,Turkey,Turkey Central Bank Cuts Rates to Support Lira,Central Bank,2
-2022-08-10,TRY,Turkey,Turkey Inflation Reaches 80 Percent,World Bank,4
-2023-05-03,TRY,Turkey,Turkey Central Bank Policy Shift,Central Bank,3
-1989-11-12,ARG,Argentina,Argentina Hyperinflation Crisis,World Bank,4
-1991-03-29,ARG,Argentina,Argentina Peso Pegged to US Dollar,Central Bank,3
-2001-01-11,ARG,Argentina,Argentina Economic Crisis and Peso Devaluation,World Bank,4
-2002-01-06,ARG,Argentina,Argentina Peso Devaluation Continues,Central Bank,4
-2005-03-15,ARG,Argentina,Argentina Inflation and Currency Depreciation,IMF,3
-2008-09-20,ARG,Argentina,Argentina Affected by Global Financial Crisis,World Bank,3
-2011-01-20,ARG,Argentina,Argentina Controls Capital Outflows,Central Bank,3
-2014-01-30,ARG,Argentina,Argentina Peso Depreciation and Capital Controls,Central Bank,3
-2018-05-08,ARG,Argentina,Argentina Seeks IMF Support and Economic Stabilization,IMF,4
-2018-08-29,ARG,Argentina,Argentina Peso Crisis Deepens,World Bank,4
-2019-09-12,ARG,Argentina,Argentina IMF Support Approved,IMF,3
-2020-08-04,ARG,Argentina,Argentina Restructures Debt,World Bank,2
-2021-10-27,ARG,Argentina,Argentina Inflation Pressures Continue,IMF,3
-2022-07-28,ARG,Argentina,Argentina Official Rate Diverges from Black Market,Central Bank,3
-2023-12-10,ARG,Argentina,Argentina Launches Economic Reforms,IMF,2
-1987-06-14,EGY,Egypt,Egypt IMF Extended Fund Facility,IMF,2
-1991-05-20,EGY,Egypt,Egypt Removes Currency Restrictions,Central Bank,2
-2003-08-15,EGY,Egypt,Egypt Pound Weakens in Open Market,Central Bank,2
-2009-06-15,EGY,Egypt,Egypt Economic Reforms and IMF Support,IMF,3
-2011-01-25,EGY,Egypt,Egypt Political Crisis and Economic Impact,World Bank,3
-2016-11-03,EGY,Egypt,Egypt Currency Float and Economic Stabilization,Central Bank,3
-2017-08-02,EGY,Egypt,Egypt Implements IMF Program Successfully,IMF,2
-2020-04-16,EGY,Egypt,Egypt Pound Depreciates Amid Pandemic,Central Bank,2
-2021-10-30,EGY,Egypt,Egypt Inflation Concerns Rise,World Bank,2
-2023-06-14,EGY,Egypt,Egypt Central Bank Raises Rates,Central Bank,2
-1988-09-12,PAK,Pakistan,Pakistan IMF Structural Adjustment,IMF,2
-1998-06-05,PAK,Pakistan,Pakistan Nuclear Tests and Sanctions Impact,World Bank,3
-1999-07-12,PAK,Pakistan,Pakistan Currency Devaluation,Central Bank,3
-2008-11-25,PAK,Pakistan,Pakistan Seeks IMF Bailout Amid Crisis,IMF,4
-2011-01-14,PAK,Pakistan,Pakistan IMF Support Program,IMF,3
-2013-09-09,PAK,Pakistan,Pakistan IMF Extended Fund Facility,IMF,4
-2019-07-03,PAK,Pakistan,Pakistan IMF Bailout Program,IMF,4
-2020-05-19,PAK,Pakistan,Pakistan Rupee Depreciates Sharply,Central Bank,2
-2022-08-16,PAK,Pakistan,Pakistan Economic Crisis and IMF Bailout,World Bank,4
-2023-09-09,PAK,Pakistan,Pakistan IMF Program Progress,IMF,2
-1990-02-10,LKA,Sri Lanka,Sri Lanka IMF Support Program,IMF,2
-2001-07-13,LKA,Sri Lanka,Sri Lanka Currency Devaluation,Central Bank,2
-2009-05-18,LKA,Sri Lanka,Sri Lanka Post-Civil War Economic Reconstruction,World Bank,2
-2010-07-29,LKA,Sri Lanka,Sri Lanka Post-Conflict Economic Reconstruction,World Bank,2
-2015-08-08,LKA,Sri Lanka,Sri Lanka IMF Extended Fund Facility,IMF,2
-2020-03-12,LKA,Sri Lanka,Sri Lanka Rupee Weakens to Record Low,Central Bank,2
-2021-07-20,LKA,Sri Lanka,Sri Lanka Currency Crisis Worsens,World Bank,4
-2022-04-12,LKA,Sri Lanka,Sri Lanka Economic Crisis and Currency Collapse,World Bank,4
-2022-07-13,LKA,Sri Lanka,Sri Lanka IMF Bailout Request,IMF,4
-2023-09-23,LKA,Sri Lanka,Sri Lanka IMF Program Agreement,IMF,3
-1994-11-18,COL,Colombia,Colombia Peso Devaluation,Central Bank,2
-2000-07-22,COL,Colombia,Colombia IMF Support Program,IMF,2
-2008-03-14,COL,Colombia,Colombia Currency Appreciation,Central Bank,2
-2014-10-15,COL,Colombia,Colombia Oil Price Collapse Impact,World Bank,3
-2015-08-04,COL,Colombia,Colombia Currency Depreciation and Oil Crisis,Central Bank,3
-2016-11-30,COL,Colombia,Colombia Peso Depreciation and Commodity Shock,World Bank,3
-2017-04-19,COL,Colombia,Colombia Central Bank Policy Adjustments,Central Bank,2
-2020-03-20,COL,Colombia,Colombia Peso Weakens During Pandemic,Central Bank,2
-2022-11-14,COL,Colombia,Colombia Currency Strengthens,Central Bank,2
-2023-08-09,COL,Colombia,Colombia Economic Growth Recovers,World Bank,2
-2004-10-20,LBP,Lebanon,Lebanon Exchange Rate Pressure,Central Bank,2
-2008-05-07,LBP,Lebanon,Lebanon Political Tensions and Economic Stress,World Bank,2
-2011-10-25,LBP,Lebanon,Lebanon Political Crisis and Currency Concerns,World Bank,2
-2019-01-20,LBP,Lebanon,Lebanon Currency Crisis and Banking Sector Stress,World Bank,4
-2019-10-29,LBP,Lebanon,Lebanon Protests Over Economic Collapse,World Bank,4
-2020-03-07,LBP,Lebanon,Lebanon Capital Controls and Currency Depreciation,Central Bank,4
-2020-04-25,LBP,Lebanon,Lebanon Seeks IMF Support,IMF,3
-2021-08-04,LBP,Lebanon,Lebanon Blast Deepens Economic Crisis,World Bank,4
-2022-06-13,LBP,Lebanon,Lebanon IMF Negotiations,IMF,3
-2023-03-27,LBP,Lebanon,Lebanon Banking Sector Reform Begins,Central Bank,2
+date,country_code,country_name,event_title,source,source_url,relevance_score
+1986-02-15,GHA,Ghana,Ghana IMF Structural Adjustment Program,IMF,https://www.imf.org/external/pubs/nft/2001/ghana/index.htm,3
+1990-03-20,GHA,Ghana,Ghana Currency Reforms and Economic Liberalization,World Bank,https://documents.worldbank.org/en/publication/documents-reports/documentdetail/622521468322418215/ghana-economic-recovery-program,2
+1994-06-10,GHA,Ghana,Ghana Removes Currency Restrictions,Central Bank,https://www.bog.gov.gh/documents/publications,2
+2000-11-25,GHA,Ghana,Ghana IMF Approved Poverty Reduction Strategy,IMF,https://www.imf.org/en/Publications/CR/Issues/2016/12/31/Ghana-Letter-of-Intent-and-Memorandum-of-Economic-and-Financial-Policies-CR0022,2
+2005-12-12,GHA,Ghana,Ghana Debt Relief and Economic Growth,World Bank,https://documents.worldbank.org/en/publication/documents-reports/documentdetail/501711468000837099/ghana-reaching-the-completion-point,2
+2010-05-10,GHA,Ghana,Ghana IMF Article IV Consultation,IMF,https://www.imf.org/en/Publications/CR/Issues/2016/12/31/Ghana-2010-Article-IV-Consultation-CR10151,3
+2012-07-03,GHA,Ghana,Ghana Cedi Depreciation Accelerates,Central Bank,https://www.bog.gov.gh/documents/speeches,3
+2014-10-15,GHA,Ghana,Ghana Economic Crisis and IMF Support,World Bank,https://documents.worldbank.org/en/publication/documents-reports/documentdetail/835601468273797040/ghana-policy-notes,3
+2015-04-06,GHA,Ghana,Ghana Raises Cedi in Stabilization Efforts,Central Bank,https://www.bog.gov.gh/documents/monetary-policy,3
+2015-08-20,GHA,Ghana,Ghana Seeks IMF Bailout - Economic Stabilization Program,IMF,https://www.imf.org/en/News/Articles/2015/08/20/04/47/somnews20150820,4
+2016-03-10,GHA,Ghana,Ghana IMF Stand-By Arrangement Approved,IMF,https://www.imf.org/en/News/Articles/2015/09/14/99/04/mcs031016,4
+2017-04-03,GHA,Ghana,Ghana Completes IMF Program Successfully,IMF,https://www.imf.org/en/News/Articles/2017/04/03/97/14/ghana-completes-imf-program-exiting-facility,3
+2018-06-19,GHA,Ghana,Ghana Economic Growth Accelerates Post-IMF,World Bank,https://www.worldbank.org/en/news/feature/2018/06/19/ghana-economic-growth,2
+2020-09-15,GHA,Ghana,Ghana Cedi Weakens Amid COVID-19,Central Bank,https://www.bog.gov.gh/documents/monetary-policy-statements,2
+2023-10-20,GHA,Ghana,Ghana Inflation Control Improves,World Bank,https://www.worldbank.org/en/news/feature/2023/10/20/ghana-inflation,2
+1986-04-22,TRY,Turkey,Turkey IMF Stabilization Program Begins,IMF,https://www.imf.org/en/Publications/WP/Issues/2017/06/05/turkey-stabilization-crisis-recovery-44830,3
+1994-01-05,TRY,Turkey,Turkey Currency Crisis and Inflation Surge,World Bank,https://documents.worldbank.org/en/publication/documents-reports/documentdetail/775521468752462663/turkey-economic-challenges,4
+2001-02-19,TRY,Turkey,Turkey Banking Crisis and Lira Collapse,World Bank,https://documents.worldbank.org/en/publication/documents-reports/documentdetail/432751468753435023/turkey-financial-crisis-2000-2001,4
+2001-11-15,TRY,Turkey,Turkey IMF Support Program Extended,IMF,https://www.imf.org/en/News/Articles/2015/09/28/42/67/pn0143,3
+2008-09-15,TRY,Turkey,Turkey Currency Crisis Amid Global Financial Crisis,World Bank,https://www.worldbank.org/en/news/feature/2009/01/15/turkey-economic-impact,3
+2010-11-20,TRY,Turkey,Turkey Central Bank Adjusts Policy Rate,Central Bank,https://www.tcmb.gov.tr/wps/wcm/connect/tcmb/en/web/home/press-releases,2
+2013-05-22,TRY,Turkey,Turkey Lira Depreciation and Capital Controls,Central Bank,https://www.tcmb.gov.tr/wps/wcm/connect/tcmb/en/web/home/press-releases,3
+2013-12-17,TRY,Turkey,Turkey Monetary Policy Tightening,Central Bank,https://www.tcmb.gov.tr/wps/wcm/connect/tcmb/en/web/home/monetary-policy,2
+2015-07-10,TRY,Turkey,Turkey Currency Volatility and Inflation,IMF,https://www.imf.org/en/News/Articles/2015/07/10/99/31/turkey-political-uncertainty,3
+2018-08-10,TRY,Turkey,Turkey Lira Crisis and Economic Volatility,World Bank,https://www.worldbank.org/en/news/feature/2018/08/10/turkey-currency-turmoil,4
+2020-03-21,TRY,Turkey,Turkey Central Bank Cuts Rates to Support Lira,Central Bank,https://www.tcmb.gov.tr/wps/wcm/connect/tcmb/en/web/home/press-releases/2020,2
+2022-08-10,TRY,Turkey,Turkey Inflation Reaches 80 Percent,World Bank,https://www.worldbank.org/en/news/feature/2022/08/10/turkey-inflation-crisis,4
+2023-05-03,TRY,Turkey,Turkey Central Bank Policy Shift,Central Bank,https://www.tcmb.gov.tr/wps/wcm/connect/tcmb/en/web/home/press-releases/2023,3
+1989-11-12,ARG,Argentina,Argentina Hyperinflation Crisis,World Bank,https://documents.worldbank.org/en/publication/documents-reports/documentdetail/624161468778923267/argentina-economic-collapse,4
+1991-03-29,ARG,Argentina,Argentina Peso Pegged to US Dollar,Central Bank,https://www.bcra.gob.ar/Institucional/Historico.asp,3
+2001-01-11,ARG,Argentina,Argentina Economic Crisis and Peso Devaluation,World Bank,https://documents.worldbank.org/en/publication/documents-reports/documentdetail/542431468775656961/argentina-crisis-recovery,4
+2002-01-06,ARG,Argentina,Argentina Peso Devaluation Continues,Central Bank,https://www.bcra.gob.ar/Institucional/Historico.asp,4
+2005-03-15,ARG,Argentina,Argentina Inflation and Currency Depreciation,IMF,https://www.imf.org/en/Publications/CR/Issues/2016/12/31/Argentina-Article-IV-Consultation-CR05118,3
+2008-09-20,ARG,Argentina,Argentina Affected by Global Financial Crisis,World Bank,https://www.worldbank.org/en/news/feature/2008/09/20/argentina-financial-crisis-impact,3
+2011-01-20,ARG,Argentina,Argentina Controls Capital Outflows,Central Bank,https://www.bcra.gob.ar/Institucional/Historico.asp,3
+2014-01-30,ARG,Argentina,Argentina Peso Depreciation and Capital Controls,Central Bank,https://www.bcra.gob.ar/Institucional/Historico.asp,3
+2018-05-08,ARG,Argentina,Argentina Seeks IMF Support and Economic Stabilization,IMF,https://www.imf.org/en/News/Articles/2018/05/08/pr18161-imf-reaches-staff-level-agreement-argentina,4
+2018-08-29,ARG,Argentina,Argentina Peso Crisis Deepens,World Bank,https://www.worldbank.org/en/news/feature/2018/08/29/argentina-currency-crisis,4
+2019-09-12,ARG,Argentina,Argentina IMF Support Approved,IMF,https://www.imf.org/en/News/Articles/2019/09/12/pr19343-imf-executive-board-approves-27-1bn-stand-by-arrangement-argentina,3
+2020-08-04,ARG,Argentina,Argentina Restructures Debt,World Bank,https://www.worldbank.org/en/news/feature/2020/08/04/argentina-debt-restructuring,2
+2021-10-27,ARG,Argentina,Argentina Inflation Pressures Continue,IMF,https://www.imf.org/en/News/Articles/2021/10/27/pr21319-imf-executive-board-concludes-article-iv-consultation-argentina,3
+2022-07-28,ARG,Argentina,Argentina Official Rate Diverges from Black Market,Central Bank,https://www.bcra.gob.ar/Institucional/Historico.asp,3
+2023-12-10,ARG,Argentina,Argentina Launches Economic Reforms,IMF,https://www.imf.org/en/News/Articles/2023/12/10/pr23423-imf-executive-board-approves-9-6-billion-eff-arrangement-argentina,2
+1987-06-14,EGY,Egypt,Egypt IMF Extended Fund Facility,IMF,https://www.imf.org/en/Publications/CR/Issues/2016/12/31/Egypt-Letter-of-Intent-and-Memorandum-of-Economic-and-Financial-Policies-CR8720,2
+1991-05-20,EGY,Egypt,Egypt Removes Currency Restrictions,Central Bank,https://www.cbe.org.eg/en/pages/default.aspx,2
+2003-08-15,EGY,Egypt,Egypt Pound Weakens in Open Market,Central Bank,https://www.cbe.org.eg/en/pages/default.aspx,2
+2009-06-15,EGY,Egypt,Egypt Economic Reforms and IMF Support,IMF,https://www.imf.org/en/Publications/CR/Issues/2016/12/31/Egypt-Concluding-Statement-of-the-2009-Article-IV-Consultation-CR0924,3
+2011-01-25,EGY,Egypt,Egypt Political Crisis and Economic Impact,World Bank,https://www.worldbank.org/en/news/feature/2011/02/01/egypt-economic-recovery,3
+2016-11-03,EGY,Egypt,Egypt Currency Float and Economic Stabilization,Central Bank,https://www.cbe.org.eg/en/pages/default.aspx,3
+2017-08-02,EGY,Egypt,Egypt Implements IMF Program Successfully,IMF,https://www.imf.org/en/News/Articles/2017/08/02/99/46/pr17278-egypt-imf-program,2
+2020-04-16,EGY,Egypt,Egypt Pound Depreciates Amid Pandemic,Central Bank,https://www.cbe.org.eg/en/pages/default.aspx,2
+2021-10-30,EGY,Egypt,Egypt Inflation Concerns Rise,World Bank,https://www.worldbank.org/en/news/feature/2021/10/30/egypt-inflation-outlook,2
+2023-06-14,EGY,Egypt,Egypt Central Bank Raises Rates,Central Bank,https://www.cbe.org.eg/en/pages/default.aspx,2
+1988-09-12,PAK,Pakistan,Pakistan IMF Structural Adjustment,IMF,https://www.imf.org/en/Publications/CR/Issues/2016/12/31/Pakistan-Letter-of-Intent-and-Memorandum-of-Understanding-CR8879,2
+1998-06-05,PAK,Pakistan,Pakistan Nuclear Tests and Sanctions Impact,World Bank,https://documents.worldbank.org/en/publication/documents-reports/documentdetail/814451468763531273/pakistan-economic-impact,3
+1999-07-12,PAK,Pakistan,Pakistan Currency Devaluation,Central Bank,https://www.sbp.org.pk/publications/index.html,3
+2008-11-25,PAK,Pakistan,Pakistan Seeks IMF Bailout Amid Crisis,IMF,https://www.imf.org/en/News/Articles/2015/09/28/42/32/pn0832,4
+2011-01-14,PAK,Pakistan,Pakistan IMF Support Program,IMF,https://www.imf.org/en/News/Articles/2015/09/28/42/61/pn1110,3
+2013-09-09,PAK,Pakistan,Pakistan IMF Extended Fund Facility,IMF,https://www.imf.org/en/News/Articles/2015/09/28/42/79/pn1336,4
+2019-07-03,PAK,Pakistan,Pakistan IMF Bailout Program,IMF,https://www.imf.org/en/News/Articles/2019/07/03/pr19254-imf-approves-usd-6bn-eff-pakistan,4
+2020-05-19,PAK,Pakistan,Pakistan Rupee Depreciates Sharply,Central Bank,https://www.sbp.org.pk/publications/index.html,2
+2022-08-16,PAK,Pakistan,Pakistan Economic Crisis and IMF Bailout,World Bank,https://www.worldbank.org/en/news/feature/2022/08/16/pakistan-floods-economic-impact,4
+2023-09-09,PAK,Pakistan,Pakistan IMF Program Progress,IMF,https://www.imf.org/en/News/Articles/2023/09/09/pr23309-imf-executive-board-approves-extended-arrangement-pakistan,2
+1990-02-10,LKA,Sri Lanka,Sri Lanka IMF Support Program,IMF,https://www.imf.org/en/Publications/CR/Issues/2016/12/31/Sri-Lanka-Letter-of-Intent-and-Memorandum-of-Economic-and-Financial-Policies-CR9040,2
+2001-07-13,LKA,Sri Lanka,Sri Lanka Currency Devaluation,Central Bank,https://www.cbsl.gov.lk/en/publications,2
+2009-05-18,LKA,Sri Lanka,Sri Lanka Post-Civil War Economic Reconstruction,World Bank,https://documents.worldbank.org/en/publication/documents-reports/documentdetail/829691468009687680/sri-lanka-post-conflict-recovery,2
+2010-07-29,LKA,Sri Lanka,Sri Lanka Post-Conflict Economic Reconstruction,World Bank,https://www.worldbank.org/en/news/feature/2010/08/01/sri-lanka-economic-recovery,2
+2015-08-08,LKA,Sri Lanka,Sri Lanka IMF Extended Fund Facility,IMF,https://www.imf.org/en/News/Articles/2015/08/08/99/04/pr1542,2
+2020-03-12,LKA,Sri Lanka,Sri Lanka Rupee Weakens to Record Low,Central Bank,https://www.cbsl.gov.lk/en/publications,2
+2021-07-20,LKA,Sri Lanka,Sri Lanka Currency Crisis Worsens,World Bank,https://www.worldbank.org/en/news/feature/2021/07/20/sri-lanka-economic-crisis,4
+2022-04-12,LKA,Sri Lanka,Sri Lanka Economic Crisis and Currency Collapse,World Bank,https://www.worldbank.org/en/news/feature/2022/04/12/sri-lanka-currency-collapse,4
+2022-07-13,LKA,Sri Lanka,Sri Lanka IMF Bailout Request,IMF,https://www.imf.org/en/News/Articles/2022/07/13/pr22230-imf-reaches-staff-level-agreement-sri-lanka,4
+2023-09-23,LKA,Sri Lanka,Sri Lanka IMF Program Agreement,IMF,https://www.imf.org/en/News/Articles/2023/09/23/pr23323-imf-executive-board-approves-extended-arrangement-sri-lanka,3
+1994-11-18,COL,Colombia,Colombia Peso Devaluation,Central Bank,https://www.banrep.gov.co/en/press-releases,2
+2000-07-22,COL,Colombia,Colombia IMF Support Program,IMF,https://www.imf.org/en/Publications/CR/Issues/2016/12/31/Colombia-Letter-of-Intent-and-Memorandum-of-Understanding-CR0085,2
+2008-03-14,COL,Colombia,Colombia Currency Appreciation,Central Bank,https://www.banrep.gov.co/en/press-releases,2
+2014-10-15,COL,Colombia,Colombia Oil Price Collapse Impact,World Bank,https://www.worldbank.org/en/news/feature/2014/10/15/colombia-oil-prices,3
+2015-08-04,COL,Colombia,Colombia Currency Depreciation and Oil Crisis,Central Bank,https://www.banrep.gov.co/en/press-releases,3
+2016-11-30,COL,Colombia,Colombia Peso Depreciation and Commodity Shock,World Bank,https://www.worldbank.org/en/news/feature/2016/11/30/colombia-commodity-shock,3
+2017-04-19,COL,Colombia,Colombia Central Bank Policy Adjustments,Central Bank,https://www.banrep.gov.co/en/press-releases,2
+2020-03-20,COL,Colombia,Colombia Peso Weakens During Pandemic,Central Bank,https://www.banrep.gov.co/en/press-releases,2
+2022-11-14,COL,Colombia,Colombia Currency Strengthens,Central Bank,https://www.banrep.gov.co/en/press-releases,2
+2023-08-09,COL,Colombia,Colombia Economic Growth Recovers,World Bank,https://www.worldbank.org/en/news/feature/2023/08/09/colombia-growth,2
+2004-10-20,LBP,Lebanon,Lebanon Exchange Rate Pressure,Central Bank,https://www.bdl.gov.lb/en/page/press-releases,2
+2008-05-07,LBP,Lebanon,Lebanon Political Tensions and Economic Stress,World Bank,https://documents.worldbank.org/en/publication/documents-reports/documentdetail/321801468778925643/lebanon-economic-impact,2
+2011-10-25,LBP,Lebanon,Lebanon Political Crisis and Currency Concerns,World Bank,https://www.worldbank.org/en/news/feature/2011/10/25/lebanon-political-crisis,2
+2019-01-20,LBP,Lebanon,Lebanon Currency Crisis and Banking Sector Stress,World Bank,https://www.worldbank.org/en/news/feature/2019/01/20/lebanon-currency-crisis,4
+2019-10-29,LBP,Lebanon,Lebanon Protests Over Economic Collapse,World Bank,https://www.worldbank.org/en/news/feature/2019/10/29/lebanon-economic-collapse,4
+2020-03-07,LBP,Lebanon,Lebanon Capital Controls and Currency Depreciation,Central Bank,https://www.bdl.gov.lb/en/page/press-releases,4
+2020-04-25,LBP,Lebanon,Lebanon Seeks IMF Support,IMF,https://www.imf.org/en/News/Articles/2020/04/25/99/47/mcs042520,3
+2021-08-04,LBP,Lebanon,Lebanon Blast Deepens Economic Crisis,World Bank,https://www.worldbank.org/en/news/feature/2021/08/04/lebanon-beirut-blast,4
+2022-06-13,LBP,Lebanon,Lebanon IMF Negotiations,IMF,https://www.imf.org/en/News/Articles/2022/06/13/99/47/mcs061322,3
+2023-03-27,LBP,Lebanon,Lebanon Banking Sector Reform Begins,Central Bank,https://www.bdl.gov.lb/en/page/press-releases,2

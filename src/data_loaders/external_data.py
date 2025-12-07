@@ -561,7 +561,7 @@ class ExternalDataFetcher:
                     'date': row['date'].strftime('%Y-%m-%d'),
                     'title': row['event_title'],
                     'source': row['source'],
-                    'url': '#',  # No URL for CSV events
+                    'url': row.get('source_url', '#'),  # Use source_url from CSV
                     'description': '',
                     'published_at': row['date'].isoformat(),
                     'relevance_score': int(row['relevance_score'])
