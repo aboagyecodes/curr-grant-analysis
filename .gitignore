@@ -27,9 +27,13 @@ wheels/
 # .streamlit/
 
 # Data files (don't commit sensitive data)
+# Allow source data files (IMF XLS and World Bank XLSX), but ignore processed CSVs
+!data/grants/imf/*.xls
+!data/grants/imf/*.xlsx
+!data/grants/worldbank/*.xls
+!data/grants/worldbank/*.xlsx
 data/grants/imf/*.csv
 data/grants/worldbank/*.csv
-data/grants/worldbank/*.xlsx
 data/grants/standardized/*.csv
 data/fx_rates/*.csv
 data/commodities/*.csv
