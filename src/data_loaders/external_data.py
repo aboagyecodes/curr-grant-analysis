@@ -467,6 +467,7 @@ class ExternalDataFetcher:
         - MEDIUM keywords: +1 point
         - Country-specific keywords: +2 points
         - Minimum score to include: 2
+        - Pre-scored articles (from historical CSV) are kept as-is
         
         Returns:
             list: Scored and filtered articles, sorted by score then date
@@ -476,6 +477,14 @@ class ExternalDataFetcher:
         country_keywords = COUNTRY_KEYWORDS.get(country_code, [])
         
         for article in articles:
+            # If article already has relevance_score (from CSV/archives), keep it
+            if 'relevance_score' in article:
+                # Still filter by minimum threshold
+                if article['relevance_score'] >= 2:
+                    scored_articles.append(article)
+                continue
+            
+            # Otherwise, calculate score from content
             content = f"{article.get('title', '')} {article.get('description', '')}".lower()
             score = 0
             
@@ -506,11 +515,393 @@ class ExternalDataFetcher:
         
         # Sort by score (descending) then by date (newest first)
         scored_articles.sort(
-            key=lambda x: (x['relevance_score'], x['published_at']),
+            key=lambda x: (
+                x.get('relevance_score', 0),
+                x.get('published_at', x.get('date', ''))
+            ),
             reverse=True
         )
         
         return scored_articles
+    
+    def _fetch_from_historical_events_csv(self, country_name, start_date, end_date, max_results=50):
+        """
+        Fetch pre-curated historical economic events from CSV
+        
+        CSV contains major economic/currency events matched to countries
+        Covers 2000-present, most relevant events for currency analysis
+        
+        Returns:
+            list: List of historical events within date range
+        """
+        try:
+            events_file = os.path.join(
+                os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+                'data', 'historical_economic_events.csv'
+            )
+            
+            if not os.path.exists(events_file):
+                return []
+            
+            df = pd.read_csv(events_file)
+            df['date'] = pd.to_datetime(df['date'])
+            
+            # Filter by country
+            country_events = df[df['country_name'] == country_name]
+            
+            # Filter by date range
+            filtered = country_events[
+                (country_events['date'].dt.date >= start_date.date()) &
+                (country_events['date'].dt.date <= end_date.date())
+            ]
+            
+            articles = []
+            for _, row in filtered.iterrows():
+                articles.append({
+                    'date': row['date'].strftime('%Y-%m-%d'),
+                    'title': row['event_title'],
+                    'source': row['source'],
+                    'url': '#',  # No URL for CSV events
+                    'description': '',
+                    'published_at': row['date'].isoformat(),
+                    'relevance_score': int(row['relevance_score'])
+                })
+            
+            return articles[:max_results]
+            
+        except Exception as e:
+            logger.debug(f"Error reading historical events CSV: {e}")
+            return []
+    
+    def _fetch_from_wikipedia_events(self, country_name, start_date, end_date, max_results=50):
+        """
+        Fetch historical economic events from Wikipedia
+        
+        Wikipedia maintains curated historical timelines with dates
+        This is highly reliable for major economic events
+        
+        Returns:
+            list: List of historical events with dates
+        """
+        try:
+            articles = []
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            }
+            
+            # Common Wikipedia pages for economic/crisis events by country
+            wikipedia_search_urls = [
+                f"https://en.wikipedia.org/wiki/{country_name}",
+                f"https://en.wikipedia.org/wiki/Economy_of_{country_name}",
+                f"https://en.wikipedia.org/wiki/{country_name}_economic_crisis",
+                "https://en.wikipedia.org/wiki/Currency_crisis",
+                "https://en.wikipedia.org/wiki/IMF_external_interventions",
+            ]
+            
+            for wiki_url in wikipedia_search_urls:
+                try:
+                    response = requests.get(wiki_url, headers=headers, timeout=10)
+                    if response.status_code != 200:
+                        continue
+                    
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    
+                    # Look for infoboxes with dates
+                    infoboxes = soup.find_all(['table'], {'class': ['infobox', 'wikitable']})
+                    
+                    for box in infoboxes:
+                        for row in box.find_all('tr'):
+                            cells = row.find_all(['td', 'th'])
+                            if len(cells) >= 2:
+                                text = ' '.join([cell.get_text(strip=True) for cell in cells])
+                                
+                                # Look for date patterns
+                                try:
+                                    # Try to find dates in the text
+                                    if any(str(year) in text for year in range(start_date.year, end_date.year + 1)):
+                                        # Try to parse date
+                                        possible_dates = []
+                                        for year in range(start_date.year, end_date.year + 1):
+                                            if str(year) in text:
+                                                possible_dates.append((year, text))
+                                        
+                                        if possible_dates:
+                                            year, event_text = possible_dates[0]
+                                            date_str = f'{year}-01-01'
+                                            articles.append({
+                                                'date': date_str,
+                                                'title': event_text[:100],
+                                                'source': f'Wikipedia: {country_name}',
+                                                'url': wiki_url,
+                                                'description': '',
+                                                'published_at': f'{year}-01-01T00:00:00',
+                                                'relevance_score': 2  # Wikipedia events are moderately relevant
+                                            })
+                                except:
+                                    continue
+                    
+                    # Look for historical sections with dates
+                    for section in soup.find_all(['h2', 'h3']):
+                        section_title = section.get_text(strip=True)
+                        if any(word in section_title.lower() for word in ['history', 'crisis', 'crisis', 'economy', 'financial']):
+                            # Get content after this section
+                            content = section.find_next('p')
+                            if content:
+                                text = content.get_text(strip=True)
+                                # Look for dates
+                                for year in range(start_date.year, end_date.year + 1):
+                                    if str(year) in text:
+                                        articles.append({
+                                            'date': f'{year}-06-15',  # Use mid-year
+                                            'title': f'{section_title}: {text[:80]}',
+                                            'source': 'Wikipedia',
+                                            'url': wiki_url,
+                                            'description': '',
+                                            'published_at': f'{year}-06-15T00:00:00',
+                                            'relevance_score': 2
+                                        })
+                                        break
+                
+                except Exception as e:
+                    logger.debug(f"Error fetching Wikipedia {wiki_url}: {e}")
+                    continue
+            
+            return articles[:max_results]
+            
+        except Exception as e:
+            logger.debug(f"Error in _fetch_from_wikipedia_events: {e}")
+            return []
+    
+    def _fetch_from_imf_archive(self, country_name, start_date, end_date, max_results=50):
+        """
+        Fetch historical news from IMF Press Release Archive
+        
+        Works for any date range including historical data
+        
+        Returns:
+            list: List of news dicts from IMF, or empty list on failure
+        """
+        try:
+            # Convert dates to strings
+            start_str = start_date.strftime('%Y-%m-%d') if hasattr(start_date, 'strftime') else str(start_date)
+            end_str = end_date.strftime('%Y-%m-%d') if hasattr(end_date, 'strftime') else str(end_date)
+            
+            # Normalize country name for search
+            search_terms = [country_name.lower()]
+            if country_name.lower() == 'turkey':
+                search_terms.append('türkiye')
+            
+            articles = []
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            }
+            
+            for search_term in search_terms:
+                try:
+                    # IMF News Search with date filtering
+                    # Note: IMF website may require pagination for historical search
+                    url = f"https://www.imf.org/en/News/SearchNews"
+                    params = {
+                        'page': 1,
+                        'pageSize': 20,
+                        'sort': 'NewestFirst',
+                    }
+                    
+                    response = requests.get(url, params=params, headers=headers, timeout=15)
+                    if response.status_code != 200:
+                        continue
+                    
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    
+                    # Find news items (structure may vary)
+                    for item in soup.find_all(['article', 'div'], {'class': ['news-item', 'release', 'story']}):
+                        try:
+                            # Extract title
+                            title_elem = item.find(['h3', 'h2', 'a'])
+                            title = title_elem.get_text(strip=True) if title_elem else None
+                            
+                            # Extract date
+                            date_elem = item.find(['time', 'span'], {'class': ['date', 'pubdate']})
+                            date_str = date_elem.get_text(strip=True) if date_elem else None
+                            
+                            # Extract URL
+                            link_elem = item.find('a')
+                            url = link_elem.get('href', '') if link_elem else ''
+                            
+                            if not (title and date_str):
+                                continue
+                            
+                            # Parse date
+                            try:
+                                pub_date = pd.to_datetime(date_str)
+                                # Filter by date range
+                                if pub_date.date() >= start_date.date() and pub_date.date() <= end_date.date():
+                                    articles.append({
+                                        'date': pub_date.strftime('%Y-%m-%d'),
+                                        'title': title,
+                                        'source': 'IMF Press Release',
+                                        'url': url if url.startswith('http') else f'https://www.imf.org{url}',
+                                        'description': '',
+                                        'published_at': pub_date.isoformat(),
+                                        'relevance_score': 3  # IMF releases are highly relevant
+                                    })
+                            except:
+                                continue
+                        except Exception as e:
+                            logger.debug(f"Error parsing IMF news item: {e}")
+                            continue
+                
+                except Exception as e:
+                    logger.debug(f"Error fetching IMF archive for '{search_term}': {e}")
+                    continue
+            
+            return articles[:max_results] if articles else []
+            
+        except Exception as e:
+            logger.debug(f"Error in _fetch_from_imf_archive: {e}")
+            return []
+    
+    def _fetch_from_worldbank_archive(self, country_name, start_date, end_date, max_results=50):
+        """
+        Fetch historical news from World Bank Archives
+        
+        Works for any date range including historical data
+        
+        Returns:
+            list: List of news dicts from World Bank, or empty list on failure
+        """
+        try:
+            start_str = start_date.strftime('%Y-%m-%d') if hasattr(start_date, 'strftime') else str(start_date)
+            end_str = end_date.strftime('%Y-%m-%d') if hasattr(end_date, 'strftime') else str(end_date)
+            
+            articles = []
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            }
+            
+            try:
+                # World Bank News archive search
+                url = "https://www.worldbank.org/en/news/all"
+                params = {
+                    'qterm': country_name,
+                    'start_year': start_date.year if hasattr(start_date, 'year') else int(str(start_date)[:4]),
+                    'end_year': end_date.year if hasattr(end_date, 'year') else int(str(end_date)[:4]),
+                }
+                
+                response = requests.get(url, params=params, headers=headers, timeout=15)
+                if response.status_code != 200:
+                    return []
+                
+                soup = BeautifulSoup(response.content, 'html.parser')
+                
+                # Find news articles
+                for item in soup.find_all(['article', 'div'], {'class': ['news-item', 'news', 'story']}):
+                    try:
+                        # Extract title
+                        title_elem = item.find(['h3', 'h2', 'a'])
+                        title = title_elem.get_text(strip=True) if title_elem else None
+                        
+                        # Extract date
+                        date_elem = item.find(['time', 'span'], {'class': ['date', 'pubdate', 'pub-date']})
+                        date_str = date_elem.get_text(strip=True) if date_elem else None
+                        
+                        # Extract URL
+                        link_elem = item.find('a')
+                        article_url = link_elem.get('href', '') if link_elem else ''
+                        
+                        if not (title and date_str):
+                            continue
+                        
+                        # Parse date
+                        try:
+                            pub_date = pd.to_datetime(date_str)
+                            # Filter by date range
+                            if pub_date.date() >= start_date.date() and pub_date.date() <= end_date.date():
+                                articles.append({
+                                    'date': pub_date.strftime('%Y-%m-%d'),
+                                    'title': title,
+                                    'source': 'World Bank News',
+                                    'url': article_url if article_url.startswith('http') else f'https://www.worldbank.org{article_url}',
+                                    'description': '',
+                                    'published_at': pub_date.isoformat(),
+                                    'relevance_score': 3  # World Bank news is highly relevant
+                                })
+                        except:
+                            continue
+                    except Exception as e:
+                        logger.debug(f"Error parsing World Bank news item: {e}")
+                        continue
+            
+            except Exception as e:
+                logger.debug(f"Error fetching World Bank archive: {e}")
+            
+            return articles[:max_results] if articles else []
+            
+        except Exception as e:
+            logger.debug(f"Error in _fetch_from_worldbank_archive: {e}")
+            return []
+    
+    def get_historical_news(self, country_name, start_date, end_date, max_results=50):
+        """
+        Get historical news from multiple archive sources
+        
+        Specifically designed for historical periods (1986-2025)
+        Pulls from pre-curated CSV, IMF, World Bank and Wikipedia
+        
+        Args:
+            country_name: Country name
+            start_date: Start date (any date, including historical)
+            end_date: End date
+            max_results: Maximum articles to return
+        
+        Returns:
+            list: List of news dicts with relevance scores
+        """
+        all_articles = []
+        
+        # Try curated historical events first (fastest, most reliable)
+        csv_articles = self._fetch_from_historical_events_csv(country_name, start_date, end_date, max_results)
+        all_articles.extend(csv_articles)
+        logger.debug(f"Found {len(csv_articles)} events from historical CSV")
+        
+        # Try Wikipedia for additional events
+        wiki_articles = self._fetch_from_wikipedia_events(country_name, start_date, end_date, max_results)
+        all_articles.extend(wiki_articles)
+        logger.debug(f"Found {len(wiki_articles)} events from Wikipedia")
+        
+        # Try IMF archive
+        imf_articles = self._fetch_from_imf_archive(country_name, start_date, end_date, max_results)
+        all_articles.extend(imf_articles)
+        logger.debug(f"Found {len(imf_articles)} articles from IMF archive")
+        
+        # Try World Bank archive
+        wb_articles = self._fetch_from_worldbank_archive(country_name, start_date, end_date, max_results)
+        all_articles.extend(wb_articles)
+        logger.debug(f"Found {len(wb_articles)} articles from World Bank archive")
+        
+        # Deduplicate by URL (skip CSV entries without URLs)
+        unique_articles = {}
+        for article in all_articles:
+            url = article.get('url', '')
+            title = article.get('title', '')
+            
+            # Use URL if available, otherwise use title
+            if url and url != '#':
+                key = url
+            else:
+                key = title
+            
+            if key and key not in unique_articles:
+                unique_articles[key] = article
+        
+        # Sort by date (newest first)
+        sorted_articles = sorted(
+            unique_articles.values(),
+            key=lambda x: x['date'],
+            reverse=True
+        )
+        
+        return sorted_articles[:max_results]
     
     def get_news_headlines(self, country_name, start_date, end_date, max_results=20, check_cache_only=False):
         """
@@ -576,10 +967,31 @@ class ExternalDataFetcher:
         if check_cache_only:
             return []
         
-        # Aggregate articles from multiple sources
+        # Determine if this is historical or recent data
+        # Recent = within last 60 days (good Google News coverage)
+        # Historical = older than 60 days (use archive sources)
+        now = datetime.now()
+        if hasattr(end_date, 'date'):
+            end_date_obj = end_date
+        else:
+            end_date_obj = datetime.strptime(str(end_date), '%Y-%m-%d')
+        
+        days_ago = (now - end_date_obj).days
+        is_historical = days_ago > 60
+        
+        logger.debug(f"Analysis period: {days_ago} days ago - Strategy: {'HISTORICAL' if is_historical else 'RECENT'}")
+        
+        # Aggregate articles from multiple sources based on date range
         all_articles = []
         
-        # Source 1: Enhanced RSS feeds
+        if is_historical:
+            # Use archival sources for historical data
+            logger.debug("Using historical archives (IMF, World Bank)")
+            hist_articles = self.get_historical_news(country_name, start_date, end_date, max_results)
+            all_articles.extend(hist_articles)
+        
+        # Always try recent sources (may have some overlap for edge cases)
+        # Source 1: Enhanced RSS feeds (recent data)
         rss_articles = self._fetch_from_enhanced_rss(country_name, start_date, end_date, NEWS_MAX_ARTICLES_PER_FETCH)
         all_articles.extend(rss_articles)
         
@@ -591,14 +1003,18 @@ class ExternalDataFetcher:
         newsdata_articles = self._fetch_from_newsdata_io(country_name, start_date, end_date, NEWS_MAX_ARTICLES_PER_FETCH)
         all_articles.extend(newsdata_articles)
         
-        # Deduplicate by URL
+        # Deduplicate by URL (but keep CSV entries even if no URL)
         unique_articles = {}
         for article in all_articles:
             url = article.get('url', '')
             title = article.get('title', '')
+            source = article.get('source', '')
             
-            # Use URL as primary key, fallback to title
-            key = url if url else title
+            # For CSV events, use title + source as key (no URL)
+            if url == '#' or not url:
+                key = f"{title}|{source}"
+            else:
+                key = url
             
             if key and key not in unique_articles:
                 unique_articles[key] = article
@@ -616,6 +1032,7 @@ class ExternalDataFetcher:
                     json.dump(scored_articles, f, indent=2, default=str)
             except Exception as e:
                 logger.debug(f"Could not write cache: {e}")
+        
         
         return scored_articles[:max_results]
     
