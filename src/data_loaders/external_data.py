@@ -843,10 +843,11 @@ class ExternalDataFetcher:
     
     def get_historical_news(self, country_name, start_date, end_date, max_results=50):
         """
-        Get historical news from multiple archive sources
+        Get historical news from official sources only
         
         Specifically designed for historical periods (1986-2025)
-        Pulls from pre-curated CSV, IMF, World Bank and Wikipedia
+        Pulls from pre-curated CSV, IMF, and World Bank archives
+        (Wikipedia excluded - only uses official news sources)
         
         Args:
             country_name: Country name
@@ -863,11 +864,6 @@ class ExternalDataFetcher:
         csv_articles = self._fetch_from_historical_events_csv(country_name, start_date, end_date, max_results)
         all_articles.extend(csv_articles)
         logger.debug(f"Found {len(csv_articles)} events from historical CSV")
-        
-        # Try Wikipedia for additional events
-        wiki_articles = self._fetch_from_wikipedia_events(country_name, start_date, end_date, max_results)
-        all_articles.extend(wiki_articles)
-        logger.debug(f"Found {len(wiki_articles)} events from Wikipedia")
         
         # Try IMF archive
         imf_articles = self._fetch_from_imf_archive(country_name, start_date, end_date, max_results)
