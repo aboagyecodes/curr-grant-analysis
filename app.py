@@ -5,13 +5,21 @@ Main Streamlit Application Entry Point
 
 import streamlit as st
 
+# CRITICAL: st.set_page_config() MUST be the first Streamlit command
+# This is required for Streamlit Cloud deployment
+st.set_page_config(
+    page_title="Currency Impact Analysis",
+    page_icon="🌍",
+    layout="wide",
+    initial_sidebar_state="auto"
+)
+
 import sys
 import os
 
 # Add project root to path
 sys.path.append(os.path.dirname(__file__))
 
-# Import pages
 # Import pages
 from src.ui.config_page import render_config_page
 from src.ui.grant_dashboard import render_grant_dashboard
@@ -62,15 +70,7 @@ print(f"DEBUG: Session State Config: {st.session_state.get('config', 'MISSING')}
 
 # Determine which page to show
 if not is_configured:
-    # Show config page as landing page (no sidebar)
-    st.set_page_config(
-        page_title="Currency Impact Analysis - Setup",
-        page_icon="🌍",
-        layout="wide",
-        initial_sidebar_state="collapsed"
-    )
-
-    
+    # Show config page as landing page
     # Load custom CSS for config page too
     css_path = os.path.join(os.path.dirname(__file__), 'assets', 'styles.css')
     if os.path.exists(css_path):
@@ -81,14 +81,6 @@ if not is_configured:
     
 elif query_page == "grant":
     # Show Grant Impact Dashboard with sidebar
-    st.set_page_config(
-        page_title="Grant Impact Analysis",
-        page_icon="📊",
-        layout="wide",
-        initial_sidebar_state="expanded"
-    )
-
-    
     # Load custom CSS
     css_path = os.path.join(os.path.dirname(__file__), 'assets', 'styles.css')
     if os.path.exists(css_path):
@@ -117,14 +109,6 @@ elif query_page == "grant":
     
 elif query_page == "anomaly":
     # Show Anomaly Dashboard with sidebar
-    st.set_page_config(
-        page_title="Anomaly Investigator",
-        page_icon="🔍",
-        layout="wide",
-        initial_sidebar_state="expanded"
-    )
-
-    
     # Load custom CSS
     css_path = os.path.join(os.path.dirname(__file__), 'assets', 'styles.css')
     if os.path.exists(css_path):
@@ -153,13 +137,6 @@ elif query_page == "anomaly":
     
 else:
     # Default to config page
-    st.set_page_config(
-        page_title="Currency Impact Analysis - Setup",
-        page_icon="🌍",
-        layout="wide",
-        initial_sidebar_state="collapsed"
-    )
-    
     # Load custom CSS (CRITICAL: Fixes layout shift after config)
     css_path = os.path.join(os.path.dirname(__file__), 'assets', 'styles.css')
     if os.path.exists(css_path):
